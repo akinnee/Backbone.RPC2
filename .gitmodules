@@ -1,0 +1,3 @@
+[submodule "jquery.jsonrpcclient"]
+	path = jquery.jsonrpcclient
+	url = https://github.com/Textalk/jquery.jsonrpcclient.js.git
