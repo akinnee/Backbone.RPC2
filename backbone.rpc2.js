@@ -9,8 +9,8 @@
  */
 if (typeof $.toJSON === 'undefined') {
 	$.toJSON = function(object) {
-		return _.clone(object);
-	}
+		return JSON.stringify(object);
+	};
 }
 
 /**
