@@ -83,26 +83,26 @@ if (typeof $.toJSON === 'undefined') {
 				create: {
 					method: 'create', // name of the method to call for CREATE
 					params: { // param_name: 'model_attribute'
-						name: 'name'
+						name: 'attributes.name'
 					}
 				},
 				read: {
 					method: 'read',
 					params: {
-						id: 'id'
+						id: 'attributes.id'
 					}
 				},
 				update: {
 					method: 'update',
 					params: {
-						id: 'id',
-						name: 'name'
+						id: 'attributes.id',
+						name: 'attributes.name'
 					}
 				},
 				'delete': {
 					method: 'delete',
 					params: {
-						id: 'id'
+						id: 'attributes.id'
 					}
 				}
 			}
@@ -112,14 +112,40 @@ if (typeof $.toJSON === 'undefined') {
 		 * Create the params object based on the method we're calling
 		 */
 		constructParams: function(method) {
+			// get the params for this method
+			var params = this.rpcOptions.methods[method].params;
+
+			// params might be a function
+			if (typeof params === 'function') {
+				params = params(this);
+			}
+
+			if (!params) {
+				params = [];
+			}
+
+			// params can be deeply nested
+			return this.recursivelySetParams(params);
+		},
+		recursivelySetParams: function(params) {
 
 			var model = this;
-			var params = {};
 
-			$.each(this.rpcOptions.methods[method].params, function(param, attribute) {
+			$.each(params, function(param, attribute) {
 
-				if (model.get(attribute)) {
-					params[param] = model.get(attribute);
+				// if this attrbite is an object (or an array), we should recurse into it any update its attributes
+				if (typeof attribute === 'object') {
+					attribute = model.recursivelySetParams(attribute);
+
+				} else if (typeof attribute === 'string') {
+					// use a model from the attribute if the string starts with "attributes."
+					if (attribute.indexOf('attributes.') === 0) {
+						var model_attribute = attribute.replace('attributes.', '');
+						if (model.get(model_attribute)) {
+							params[param] = model.get(model_attribute);
+						}
+					}
+					// otherwise use the string that was given in configuration
 				}
 
 			});
