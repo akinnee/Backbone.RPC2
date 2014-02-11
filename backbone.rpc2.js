@@ -7,6 +7,7 @@
 /**
  * Helpers
  */
+// Fallback to JSON.stringify if $.toJSON is not available
 if (typeof $.toJSON === 'undefined') {
 	$.toJSON = function(object) {
 		return JSON.stringify(object);
@@ -40,14 +41,14 @@ if (typeof $.toJSON === 'undefined') {
 		var success = function(response) {
 
 			// call the success callback
-			options.success(model, response, options);
+			options.success(response);
 
 		};
 
 		var error = function(response) {
 
 			// call the error callback
-			options.error(model, response, options);
+			options.error(response);
 
 		};
 
