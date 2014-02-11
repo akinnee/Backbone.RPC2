@@ -33,7 +33,8 @@ if (typeof $.toJSON === 'undefined') {
 	RPC2.sync = function(method, model, options) {
 
 		var client = new $.JsonRpcClient({
-			ajaxUrl: model.url
+			ajaxUrl: model.url,
+			headers: model.rpcOptions.headers
 		});
 
 		var success = function(response) {
@@ -76,6 +77,7 @@ if (typeof $.toJSON === 'undefined') {
 		 */
 		url: 'path/to/my/rpc/handler',
 		rpcOptions: {
+			headers: {},
 			methods: {
 				create: {
 					method: 'create', // name of the method to call for CREATE
