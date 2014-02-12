@@ -107,13 +107,18 @@ if (typeof $.toJSON === 'undefined') {
 				}
 			}
 		},
+
 		/**
-		 * Inherits undefined options from the super class
+		 * Inherits undefined options in the rpcOptions object from the super class
+		 * @param  {[object]} rpcOptions - The rpcOptions to inherit from; defaults to the super class's rpcOptions
 		 */
-		inheritOptions: function() {
-			this.rpcOptions = this.recursivelyInheritOptions(this.rpcOptions, this.constructor.__super__.rpcOptions, 'rpcOptions');
+		inheritRpcOptions: function(rpcOptions) {
+			if (!rpcOptions) {
+				rpcOptions = this.constructor.__super__.rpcOptions;
+			}
+			this.rpcOptions = this.recursivelyInheritRpcOptions(this.rpcOptions, rpcOptions, 'rpcOptions');
 		},
-		recursivelyInheritOptions: function(rpcOptions, superRpcOptions, parentKey) {
+		recursivelyInheritRpcOptions: function(rpcOptions, superRpcOptions, parentKey) {
 			// only inherit the following properties if they are undefined
 			var dontRecursivelyInherit = [
 				'rpcOptions.headers',
@@ -127,7 +132,7 @@ if (typeof $.toJSON === 'undefined') {
 				// if this key is an object, we'll recursively pull unset options from it
 				// we won't touch anything inside the options defined in the dontRecursivelyInherit array
 				} else if (typeof rpcOptions[key] === 'object' && _.indexOf(dontRecursivelyInherit, parentKey+'.'+key) === -1) {
-					rpcOptions[key] = model.recursivelyInheritOptions(rpcOptions[key], superRpcOptions[key], key);
+					rpcOptions[key] = model.recursivelyInheritRpcOptions(rpcOptions[key], superRpcOptions[key], key);
 
 				}
 			});
