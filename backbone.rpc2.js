@@ -107,6 +107,32 @@ if (typeof $.toJSON === 'undefined') {
 				}
 			}
 		},
+		/**
+		 * Inherits undefined options from the super class
+		 */
+		inheritOptions: function() {
+			this.rpcOptions = this.recursivelyInheritOptions(this.rpcOptions, this.constructor.__super__.rpcOptions, 'rpcOptions');
+		},
+		recursivelyInheritOptions: function(rpcOptions, superRpcOptions, parentKey) {
+			// only inherit the following properties if they are undefined
+			var dontRecursivelyInherit = [
+				'rpcOptions.headers',
+				'methods.create', 'methods.read', 'methods.update', 'methods.delete'
+			];
+			var model = this;
+			$.each(superRpcOptions, function(key, value) {
+				if (typeof rpcOptions[key] === 'undefined') {
+					rpcOptions[key] = value;
+
+				// if this key is an object, we'll recursively pull unset options from it
+				// we won't touch anything inside the options defined in the dontRecursivelyInherit array
+				} else if (typeof rpcOptions[key] === 'object' && _.indexOf(dontRecursivelyInherit, parentKey+'.'+key) === -1) {
+					rpcOptions[key] = model.recursivelyInheritOptions(rpcOptions[key], superRpcOptions[key], key);
+
+				}
+			});
+			return rpcOptions;
+		},
 
 		/**
 		 * Create the params object based on the method we're calling
@@ -132,7 +158,6 @@ if (typeof $.toJSON === 'undefined') {
 			var model = this;
 
 			$.each(params, function(param, attribute) {
-
 				// if this attrbite is an object (or an array), we should recurse into it any update its attributes
 				if (typeof attribute === 'object') {
 					attribute = model.recursivelySetParams(attribute);
