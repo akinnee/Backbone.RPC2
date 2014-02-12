@@ -171,8 +171,11 @@ if (typeof $.toJSON === 'undefined') {
 					// use a model from the attribute if the string starts with "attributes."
 					if (attribute.indexOf('attributes.') === 0) {
 						var model_attribute = attribute.replace('attributes.', '');
-						if (model.get(model_attribute)) {
+						if (typeof model.get(model_attribute) !== 'undefined') {
 							params[param] = model.get(model_attribute);
+						} else {
+							// get rid of params which reference undefined model attributes
+							delete params[param];
 						}
 					}
 					// otherwise use the string that was given in configuration
