@@ -144,7 +144,7 @@ if (typeof $.toJSON === 'undefined') {
 		 */
 		constructParams: function(method) {
 			// get the params for this method
-			var params = this.rpcOptions.methods[method].params;
+			var params = _.extend({}, this.rpcOptions.methods[method].params);
 
 			// params might be a function
 			if (typeof params === 'function') {
