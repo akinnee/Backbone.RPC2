@@ -52,19 +52,22 @@ if (typeof $.toJSON === 'undefined') {
 
 		};
 
+		var deferred;
+
 		if (method == "create") {
-			client.call(model.rpcOptions.methods.create.method, model.constructParams("create"), success, error);
+			deferred = client.call(model.rpcOptions.methods.create.method, model.constructParams("create"), success, error);
 
 		} else if (method == "read") {
-			client.call(model.rpcOptions.methods.read.method, model.constructParams("read"), success, error);
+			deferred = client.call(model.rpcOptions.methods.read.method, model.constructParams("read"), success, error);
 
 		} else if (method == "update") {
-			client.call(model.rpcOptions.methods.update.method, model.constructParams("update"), success, error);
+			deferred = client.call(model.rpcOptions.methods.update.method, model.constructParams("update"), success, error);
 
 		} else if (method == "delete") {
-			client.call(model.rpcOptions.methods.delete.method, model.constructParams("delete"), success, error);
+			deferred = client.call(model.rpcOptions.methods.delete.method, model.constructParams("delete"), success, error);
 		}
 
+		return deferred;
 	};
 
 	/**
