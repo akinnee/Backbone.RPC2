@@ -1,0 +1,19 @@
+{
+  "name": "backbone.rpc2",
+  "version": "0.0.0",
+  "description": "Adds a new Model and Collection which can sync over JSON RPC 2.0",
+  "main": "backbone.rpc2.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akinnee/Backbone.RPC2.git"
+  },
+  "author": "Alex Kinnee (http://alexkinnee.com)",
+  "license": "GPLv2",
+  "gitHead": "b9f1a0c5c50881b183e1e43d1471b5adacb806bb"
+}
