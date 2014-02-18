@@ -71,46 +71,9 @@ if (typeof $.toJSON === 'undefined') {
 	};
 
 	/**
-	 * Backbone.RPC2.Model
-	 * An extension of Backbone.Model which uses RPC2.sync instead of the default Backbone.sync
+	 * Utility methods used by RPC2.Model and RPC2.Collection
 	 */
-	RPC2.Model = Backbone.Model.extend({
-
-		/**
-		 * Important options for RPC for this model
-		 */
-		url: 'path/to/my/rpc/handler',
-		rpcOptions: {
-			headers: {},
-			methods: {
-				create: {
-					method: 'create', // name of the method to call for CREATE
-					params: { // param_name: 'model_attribute'
-						name: 'attributes.name'
-					}
-				},
-				read: {
-					method: 'read',
-					params: {
-						id: 'attributes.id'
-					}
-				},
-				update: {
-					method: 'update',
-					params: {
-						id: 'attributes.id',
-						name: 'attributes.name'
-					}
-				},
-				'delete': {
-					method: 'delete',
-					params: {
-						id: 'attributes.id'
-					}
-				}
-			}
-		},
-
+	RPC2.Util = {
 		/**
 		 * Inherits undefined options in the rpcOptions object from the super class
 		 * @param  {[object]} rpcOptions - The rpcOptions to inherit from; defaults to the super class's rpcOptions
@@ -188,7 +151,98 @@ if (typeof $.toJSON === 'undefined') {
 
 			return params;
 
+		}
+	};
+
+	/**
+	 * Backbone.RPC2.Model
+	 * An extension of Backbone.Model which uses RPC2.sync instead of the default Backbone.sync
+	 */
+	RPC2.Model = Backbone.Model.extend({
+
+		/**
+		 * Important options for RPC for this model
+		 */
+		url: 'path/to/my/rpc/handler',
+		rpcOptions: {
+			headers: {},
+			methods: {
+				create: {
+					method: 'create', // name of the method to call for CREATE
+					params: { // param_name: 'model_attribute'
+						name: 'attributes.name'
+					}
+				},
+				read: {
+					method: 'read',
+					params: {
+						id: 'attributes.id'
+					}
+				},
+				update: {
+					method: 'update',
+					params: {
+						id: 'attributes.id',
+						name: 'attributes.name'
+					}
+				},
+				'delete': {
+					method: 'delete',
+					params: {
+						id: 'attributes.id'
+					}
+				}
+			}
 		},
+
+		/**
+		 * Utility methods
+		 */
+		inheritRpcOptions:				RPC2.Util.inheritRpcOptions,
+		recursivelyInheritRpcOptions:	RPC2.Util.recursivelyInheritRpcOptions,
+		constructParams:				RPC2.Util.constructParams,
+		recursivelySetParams:			RPC2.Util.recursivelySetParams,
+
+		/**
+		 * Maps to our custom sync method
+		 */
+		sync: function(method, model, options) {
+			return RPC2.sync(method, model, options);
+		}
+
+	});
+
+	/**
+	 * Backbone.RPC2.Collection
+	 * An extension of Backbone.Collection which uses RPC2.sync instead of the default Backbone.sync
+	 */
+	RPC2.Collection = Backbone.Collection.extend({
+
+		/**
+		 * Important options for RPC for this model
+		 */
+		url: 'path/to/my/rpc/handler',
+		rpcOptions: {
+			headers: {},
+			methods: {
+				read: {
+					method: 'readCollection',
+					params: {}
+				},
+				update: {
+					method: 'updateCollection',
+					params: function(collection) { return collection.toJSON(); }
+				}
+			}
+		},
+
+		/**
+		 * Utility methods
+		 */
+		inheritRpcOptions:				RPC2.Util.inheritRpcOptions,
+		recursivelyInheritRpcOptions:	RPC2.Util.recursivelyInheritRpcOptions,
+		constructParams:				RPC2.Util.constructParams,
+		recursivelySetParams:			RPC2.Util.recursivelySetParams,
 
 		/**
 		 * Maps to our custom sync method
