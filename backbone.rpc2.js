@@ -206,9 +206,7 @@ if (typeof $.toJSON === 'undefined') {
 		/**
 		 * Maps to our custom sync method
 		 */
-		sync: function(method, model, options) {
-			return RPC2.sync(method, model, options);
-		}
+		sync: RPC2.sync
 
 	});
 
@@ -247,9 +245,7 @@ if (typeof $.toJSON === 'undefined') {
 		/**
 		 * Maps to our custom sync method
 		 */
-		sync: function(method, model, options) {
-			return RPC2.sync(method, model, options);
-		}
+		sync: RPC2.sync
 
 	});
 
