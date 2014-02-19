@@ -21,29 +21,6 @@ module.exports = function(grunt) {
           'tests/backbone.rpc2_spec.js'
         ]
       }
-    },
-
-    /**
-     * Generate coverage reports
-     */
-    coverage: {
-      src: [
-        '<%= jasmine.run.src %>'
-      ],
-      options: {
-        host: '<%= jasmine.run.options.host %>',
-        vendor: [
-          '<%= jasmine.run.options.vendor %>'
-        ],
-        specs: [
-          '<%= jasmine.run.options.specs %>'
-        ],
-        template: require('grunt-template-jasmine-istanbul'),
-        templateOptions: {
-          coverage: 'tests/coverage/coverage.json',
-          report: 'tests/coverage'
-        }
-      }
     }
 
   });
