@@ -15,5 +15,10 @@
   },
   "author": "Alex Kinnee (http://alexkinnee.com)",
   "license": "GPLv2",
-  "gitHead": "b9f1a0c5c50881b183e1e43d1471b5adacb806bb"
+  "gitHead": "b9f1a0c5c50881b183e1e43d1471b5adacb806bb",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jasmine": "~0.6.1",
+    "grunt-contrib-connect": "~0.6.0"
+  }
 }
