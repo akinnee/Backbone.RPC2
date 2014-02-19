@@ -19,7 +19,8 @@ module.exports = function(grunt) {
         ],
         specs: [
           'tests/backbone.rpc2_spec.js'
-        ]
+        ],
+        keepRunner: true
       }
     }
 
