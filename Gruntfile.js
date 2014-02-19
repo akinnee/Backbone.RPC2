@@ -10,8 +10,13 @@ module.exports = function(grunt) {
 
   // Tasks
   grunt.registerTask('dev', 'Run tests and other dev related tasks.', [
-    'connect:dev', 'jasmine:run', 'watch'
+    'mockapi', 'connect:dev', 'jasmine:run', 'watch'
   ]);
+
+  // Mock API server
+  grunt.registerTask('mockapi', 'Start a mock JSON RPC 2.0 API server.', function() {
+    require('./tests/test_server/jsonrpc_server.js');
+  });
 
   // Default task
   grunt.registerTask('default', ['dev']);

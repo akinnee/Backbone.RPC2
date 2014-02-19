@@ -1,30 +1,121 @@
 $(function() {
 	describe("Backbone.RPC2", function() {
 
-		var model;
+		var errorSpy,
+			completeSpy,
+			TestModel,
+			model,
+			collection;
+
+		TestModel = Backbone.RPC2.Model.extend({
+			url: 'http://localhost:5080'
+		});
 
 		beforeEach(function() {
-			model = new Backbone.RPC2.Model();
+			// create an error callback to be used in our CRUD tests
+			errorSpy = jasmine.createSpy('error');
+			completeSpy = jasmine.createSpy('complete');
+
+			model = new TestModel({
+				id: 123
+			});
+
+			collection = new Backbone.RPC2.Collection();
 		});
+
+		afterEach(function() {
+			// the error callback should not have been called
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		/**
+		 * Test setup which happens when the plugin is loaded
+		 */
 
 		it("adds the RPC2 object to the Backbone object", function() {
 			expect(Backbone.RPC2).toBeDefined();
+		});
+
+		it("adds has a Util object", function() {
+			expect(Backbone.RPC2.Util).toBeDefined();
 		});
 
 		it("defines a custom sync method", function() {
 			expect(Backbone.RPC2.sync).toBeDefined();
 		});
 
-		it("adds a new kind of model", function() {
+		it("has a new kind of model", function() {
 			expect(Backbone.RPC2.Model).toBeDefined();
 		});
 
-		it("adds a new kind of collection", function() {
+		it("has a new kind of collection", function() {
 			expect(Backbone.RPC2.Collection).toBeDefined();
 		});
 
 		it("uses the custom sync method for the new model", function() {
-			expect(model.sync).toEqual(Backbone.RPC2.sync);
+			spyOn(Backbone.RPC2, 'sync');
+			model.sync();
+			expect(Backbone.RPC2.sync).toHaveBeenCalled();
+		});
+
+		it("calls the custom sync method when fetching the new model", function() {
+			spyOn(Backbone.RPC2, 'sync');
+			model.fetch();
+			expect(Backbone.RPC2.sync).toHaveBeenCalled();
+		});
+
+		/**
+		 * Test our async CRUD methods for models
+		 */
+
+		// CREATE
+		it("can fetch models from a server", function(done) {
+			expect(model.get('name')).toBeUndefined();
+			model.fetch({
+				success: function() {
+					expect(model.get('name')).toBe('Box of matches');
+					done();
+				},
+				error: function() { errorSpy(); done(); }
+			});
+		});
+
+		// READ
+		it("can save new models to a server", function(done) {
+			model.save({
+				name: 'Jar of salsa'
+			}, {
+				success: function(model, response) {
+					expect(response.name).toBe('Jar of salsa');
+					done();
+				},
+				error: function() { errorSpy(); done(); }
+			});
+		});
+
+		// UPDATE
+		it("can change models and save the changes to a server", function(done) {
+			model.fetch({
+				success: function() {
+					model.set('name', 'Can of beans');
+					model.save({}, {
+						success: function(model, response) {
+							expect(response.name).toBe('Can of beans');
+							done();
+						},
+						error: function() { errorSpy(); done(); }
+					});
+				},
+				error: function() { errorSpy(); done(); }
+			});
+		});
+
+		// DELETE
+		it("can delete models from a server", function(done) {
+			model.destroy({
+				success: function() { done(); },
+				error: function() { errorSpy(); done(); }
+			});
 		});
 
 	});
