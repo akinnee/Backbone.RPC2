@@ -1,3 +1,6 @@
 [submodule "jquery.jsonrpcclient"]
 	path = jquery.jsonrpcclient
 	url = https://github.com/akinnee/jquery.jsonrpcclient.js.git
+[submodule "tests/test_server/node-json-rpc"]
+	path = tests/test_server/node-json-rpc
+	url = https://github.com/akinnee/node-json-rpc.git
