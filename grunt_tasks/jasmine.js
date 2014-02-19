@@ -12,10 +12,10 @@ module.exports = function(grunt) {
       options: {
         host: 'http://localhost:8085',
         vendor: [
-          'vendor/jquery-1.11.0.min.js',
+          'tests/vendor/jquery-1.11.0.min.js',
           'jquery.jsonrpcclient/jquery.jsonrpcclient.js',
-          'vendor/underscore-min.js',
-          'vendor/backbone-min.js'
+          'tests/vendor/underscore-min.js',
+          'tests/vendor/backbone-min.js'
         ],
         specs: [
           'tests/backbone.rpc2_spec.js'
