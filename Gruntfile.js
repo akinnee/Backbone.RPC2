@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 
   // Tasks
   grunt.registerTask('dev', 'Run tests and other dev related tasks.', [
-    'connect:dev', 'jasmine:run'
+    'connect:dev', 'jasmine:run', 'watch'
   ]);
 
   // Default task
