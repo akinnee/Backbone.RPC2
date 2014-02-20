@@ -17,7 +17,8 @@ $(function() {
 			completeSpy = jasmine.createSpy('complete');
 
 			model = new TestModel({
-				id: 123
+				id: 123,
+				name: 'Create of oranges'
 			});
 
 			collection = new Backbone.RPC2.Collection();
@@ -124,13 +125,30 @@ $(function() {
 			expect(someModelInstance.rpcOptions.methods.update.method).toBe('changeSomething');
 		});
 
+		// RPC2.Util.constructParams
+		it("constructs request params based on what is configured", function() {
+			var params;
+
+			params = model.constructParams('create');
+			expect(params).toEqual({ name: "Create of oranges" });
+
+			params = model.constructParams('read');
+			expect(params).toEqual({ id: 123 });
+
+			params = model.constructParams('update');
+			expect(params).toEqual({ id: 123, name: "Create of oranges" });
+
+			params = model.constructParams('delete');
+			expect(params).toEqual({ id: 123 });
+		});
+
 		/**
 		 * Test our async CRUD methods for models
 		 */
 
 		// CREATE
 		it("can fetch models from a server", function(done) {
-			expect(model.get('name')).toBeUndefined();
+			expect(model.get('name')).toBe('Create of oranges');
 			model.fetch({
 				success: function() {
 					expect(model.get('name')).toBe('Box of matches');
