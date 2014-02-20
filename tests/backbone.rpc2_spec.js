@@ -65,6 +65,66 @@ $(function() {
 		});
 
 		/**
+		 * Test our common Util methods
+		 */
+
+		// RPC2.Util.inheritRpcOptions
+		it("allows models to recursively inherit the rpcOptions from the model's __super__", function() {
+			var SomeModel,
+				someModelInstance;
+
+			SomeModel = Backbone.RPC2.Model.extend({
+				rpcOptions: {
+					methods: {
+						create: {
+							method: 'makeSomething'
+						}
+					}
+				},
+				initialize: function() {
+					this.inheritRpcOptions();
+				}
+			});
+
+			someModelInstance = new SomeModel();
+
+			// the option we set should be there
+			expect(someModelInstance.rpcOptions.methods.create.method).toBe('makeSomething');
+			// but also, the option we inherited from Backbone.RPC2.Model should be there
+			expect(someModelInstance.rpcOptions.methods.read.method).toBe('read');
+		});
+		it("allows models to recursively inherit the rpcOptions from any object", function() {
+			var SomeModel,
+				someModelInstance;
+
+			SomeModel = Backbone.RPC2.Model.extend({
+				rpcOptions: {
+					methods: {
+						create: {
+							method: 'makeSomething'
+						}
+					}
+				},
+				initialize: function() {
+					this.inheritRpcOptions({
+						methods: {
+							update: {
+								method: 'changeSomething'
+							}
+						}
+					});
+				}
+			});
+
+			someModelInstance = new SomeModel();
+
+			// the option we set should be there
+			expect(someModelInstance.rpcOptions.methods.create.method).toBe('makeSomething');
+			// but also, the option we inherited from our object should be there
+			expect(someModelInstance.rpcOptions.methods.update.method).toBe('changeSomething');
+		});
+
+		/**
 		 * Test our async CRUD methods for models
 		 */
 
