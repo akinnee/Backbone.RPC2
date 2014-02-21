@@ -110,7 +110,11 @@ if (typeof $.toJSON === 'undefined') {
 		 */
 		constructParams: function(method) {
 			// get the params for this method
-			var params = _.extend({}, this.rpcOptions.methods[method].params);
+			var params = this.rpcOptions.methods[method].params;
+			if (typeof params !== 'function') {
+				// copy params so we aren't modifying the config object
+				params = _.extend({}, params);
+			}
 
 			// params might be a function
 			if (typeof params === 'function') {

@@ -141,6 +141,16 @@ $(function() {
 			params = model.constructParams('delete');
 			expect(params).toEqual({ id: 123 });
 		});
+		it("can construct params from a function", function() {
+			var params;
+			model.rpcOptions.methods.create.params = function() {
+				return {
+					name: 'testing123'
+				};
+			};
+			params = model.constructParams('create');
+			expect(params).toEqual({ name: "testing123" });
+		});
 
 		/**
 		 * Test our async CRUD methods for models
