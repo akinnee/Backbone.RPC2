@@ -14,7 +14,7 @@
     "url": "https://github.com/akinnee/Backbone.RPC2.git"
   },
   "author": "Alex Kinnee (http://alexkinnee.com)",
-  "license": "GPLv2",
+  "license": "LGPL v2.1",
   "gitHead": "b9f1a0c5c50881b183e1e43d1471b5adacb806bb",
   "devDependencies": {
     "grunt": "~0.4.2",
