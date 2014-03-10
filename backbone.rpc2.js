@@ -4,20 +4,43 @@
  * instead of REST
  */
 
-/**
- * Helpers
- */
-// Fallback to JSON.stringify if $.toJSON is not available
-if (typeof $.toJSON === 'undefined') {
-	$.toJSON = function(object) {
-		return JSON.stringify(object);
-	};
-}
+// universal module definition: https://github.com/umdjs
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+
+        // make jQuery happy
+		if (typeof window == 'undefined')
+			global.window = require('jsdom').jsdom().createWindow();
+
+        define(['backbone', 'underscore', 'jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS
+
+		// make jQuery happy
+		if (typeof window == 'undefined')
+			global.window = require('jsdom').jsdom().createWindow();
+
+        factory(require('backbone', 'underscore', 'jquery'));
+    } else {
+        // Browser globals
+        factory(Backbone, _, $);
+    }
 
 /**
  * The actual plugin
  */
-(function () {
+}(function (Backbone, _, $) {
+
+	/**
+	 * Helpers
+	 */
+	// Fallback to JSON.stringify if $.toJSON is not available
+	if (typeof $.toJSON === 'undefined') {
+		$.toJSON = function(object) {
+			return JSON.stringify(object);
+		};
+	}
 
 	// Define the RPC2 plugin
 	var RPC2 = {};
@@ -253,4 +276,5 @@ if (typeof $.toJSON === 'undefined') {
 
 	});
 
-}());
+	return Backbone.RPC2;
+}));
