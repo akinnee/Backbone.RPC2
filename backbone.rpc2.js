@@ -52,20 +52,16 @@ if (typeof $.toJSON === 'undefined') {
 
 		};
 
-		var deferred;
+		// construct the params based on the rpcOptions
+		var payload = model.constructParams(method);
 
-		if (method == "create") {
-			deferred = client.call(model.rpcOptions.methods.create.method, model.constructParams("create"), success, error);
-
-		} else if (method == "read") {
-			deferred = client.call(model.rpcOptions.methods.read.method, model.constructParams("read"), success, error);
-
-		} else if (method == "update") {
-			deferred = client.call(model.rpcOptions.methods.update.method, model.constructParams("update"), success, error);
-
-		} else if (method == "delete") {
-			deferred = client.call(model.rpcOptions.methods.delete.method, model.constructParams("delete"), success, error);
+		// add any data passed in to the payload
+		if (typeof options.data === 'object') {
+			payload = _.extend(payload, options.data);
 		}
+
+		// make the call, passing in our success and error handlers and returning the deferred object that jQuery $.ajax returns
+		var deferred = client.call(model.rpcOptions.methods[method].method, payload, success, error);
 
 		return deferred;
 	};
