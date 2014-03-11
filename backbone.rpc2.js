@@ -13,7 +13,7 @@
 		if (typeof window == 'undefined')
 			global.window = require('jsdom').jsdom().createWindow();
 
-        define(['backbone', 'underscore', 'jquery'], factory);
+        define(['backbone', 'underscore', 'jquery', 'jqueryJsonRpcClient'], factory);
     } else if (typeof exports === 'object') {
         // Node/CommonJS
 
@@ -21,16 +21,16 @@
 		if (typeof window == 'undefined')
 			global.window = require('jsdom').jsdom().createWindow();
 
-        factory(require('backbone', 'underscore', 'jquery'));
+        factory(require('backbone', 'underscore', 'jquery', 'jqueryJsonRpcClient'));
     } else {
         // Browser globals
-        factory(Backbone, _, $);
+        factory(Backbone, _, $, $.JsonRpcClient);
     }
 
 /**
  * The actual plugin
  */
-}(function (Backbone, _, $) {
+}(function (Backbone, _, $, JsonRpcClient) {
 
 	/**
 	 * Helpers
@@ -56,7 +56,7 @@
 	 */
 	RPC2.sync = function(method, model, options) {
 
-		var client = new $.JsonRpcClient({
+		var client = new JsonRpcClient({
 			ajaxUrl: model.url,
 			headers: model.rpcOptions.headers
 		});
