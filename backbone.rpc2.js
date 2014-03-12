@@ -4,20 +4,43 @@
  * instead of REST
  */
 
-/**
- * Helpers
- */
-// Fallback to JSON.stringify if $.toJSON is not available
-if (typeof $.toJSON === 'undefined') {
-	$.toJSON = function(object) {
-		return JSON.stringify(object);
-	};
-}
+// universal module definition: https://github.com/umdjs
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+
+        // make jQuery happy
+		if (typeof window == 'undefined')
+			global.window = require('jsdom').jsdom().createWindow();
+
+        define(['backbone', 'underscore', 'jquery', 'jqueryJsonRpcClient'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS
+
+		// make jQuery happy
+		if (typeof window == 'undefined')
+			global.window = require('jsdom').jsdom().createWindow();
+
+        factory(require('backbone', 'underscore', 'jquery', 'jqueryJsonRpcClient'));
+    } else {
+        // Browser globals
+        factory(Backbone, _, $, $.JsonRpcClient);
+    }
 
 /**
  * The actual plugin
  */
-(function () {
+}(function (Backbone, _, $, JsonRpcClient) {
+
+	/**
+	 * Helpers
+	 */
+	// Fallback to JSON.stringify if $.toJSON is not available
+	if (typeof $.toJSON === 'undefined') {
+		$.toJSON = function(object) {
+			return JSON.stringify(object);
+		};
+	}
 
 	// Define the RPC2 plugin
 	var RPC2 = {};
@@ -33,7 +56,7 @@ if (typeof $.toJSON === 'undefined') {
 	 */
 	RPC2.sync = function(method, model, options) {
 
-		var client = new $.JsonRpcClient({
+		var client = new JsonRpcClient({
 			ajaxUrl: model.url,
 			headers: model.rpcOptions.headers
 		});
@@ -253,4 +276,5 @@ if (typeof $.toJSON === 'undefined') {
 
 	});
 
-}());
+	return Backbone.RPC2;
+}));
