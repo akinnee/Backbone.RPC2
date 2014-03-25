@@ -65,6 +65,7 @@
 
 			// call the success callback
 			options.success(response);
+			options.complete(response);
 
 		};
 
@@ -72,6 +73,7 @@
 
 			// call the error callback
 			options.error(response);
+			options.complete(response);
 
 		};
 
