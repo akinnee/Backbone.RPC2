@@ -3,6 +3,7 @@ $(function() {
 
 		var errorSpy,
 			completeSpy,
+			expectCompleteSpy,
 			TestModel,
 			model,
 			collection;
@@ -15,6 +16,7 @@ $(function() {
 			// create an error callback to be used in our CRUD tests
 			errorSpy = jasmine.createSpy('error');
 			completeSpy = jasmine.createSpy('complete');
+			expectCompleteSpy = false;
 
 			model = new TestModel({
 				id: 123,
@@ -27,6 +29,10 @@ $(function() {
 		afterEach(function() {
 			// the error callback should not have been called
 			expect(errorSpy).not.toHaveBeenCalled();
+
+			if (expectCompleteSpy) {
+				expect(completeSpy).toHaveBeenCalled();
+			}
 		});
 
 		/**
@@ -162,10 +168,11 @@ $(function() {
 			model.fetch({
 				success: function() {
 					expect(model.get('name')).toBe('Box of matches');
-					done();
 				},
-				error: function() { errorSpy(); done(); }
+				error: function() { errorSpy(); },
+				complete: function() { completeSpy(); done(); }
 			});
+			expectCompleteSpy = true;
 		});
 
 		// READ
@@ -175,10 +182,11 @@ $(function() {
 			}, {
 				success: function(model, response) {
 					expect(response.name).toBe('Jar of salsa');
-					done();
 				},
-				error: function() { errorSpy(); done(); }
+				error: function() { errorSpy(); },
+				complete: function() { completeSpy(); done(); }
 			});
+			expectCompleteSpy = true;
 		});
 
 		// UPDATE
@@ -189,21 +197,24 @@ $(function() {
 					model.save({}, {
 						success: function(model, response) {
 							expect(response.name).toBe('Can of beans');
-							done();
 						},
-						error: function() { errorSpy(); done(); }
+						error: function() { errorSpy(); },
+						complete: function() { completeSpy(); done(); }
 					});
 				},
-				error: function() { errorSpy(); done(); }
+				error: function() { errorSpy(); done(); },
+				complete: function() { completeSpy(); }
 			});
+			expectCompleteSpy = true;
 		});
 
 		// DELETE
 		it("can delete models from a server", function(done) {
 			model.destroy({
-				success: function() { done(); },
-				error: function() { errorSpy(); done(); }
+				error: function() { errorSpy(); },
+				complete: function() { completeSpy(); done(); }
 			});
+			expectCompleteSpy = true;
 		});
 
 	});
