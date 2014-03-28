@@ -134,7 +134,7 @@
 			var params = this.rpcOptions.methods[method].params;
 			if (typeof params !== 'function') {
 				// copy params so we aren't modifying the config object
-				params = _.extend({}, params);
+				params = _.cloneDeep(params);
 			}
 
 			// params might be a function
