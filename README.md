@@ -3,10 +3,15 @@ Backbone.RPC2
 
 Use Backbone with a JSON RPC 2.0 API
 
+# Requirements
+
+Lo-Dash (not the Underscore build) or Underscore with a shim to make _.deepClone work.
+
 # Usage
 
 ```
-// works with requirejs, node require, commonjs, etc.
+// We used the https://github.com/umdjs/umd pattern,
+// so this works with requirejs, node require, commonjs, etc.
 var RPC2 = require('backbone.rpc2');
 
 var BaseModel = RPC2.Model.extend({
@@ -27,8 +32,11 @@ var BaseModel = RPC2.Model.extend({
                 // name of method on server
                 method: 'create_something',
                 
-                // params to send
+                // params to send,
+                // can also be a function which returns the params object
+                // Example: function(model) { return { name: model.get(name) }; }
                 params: {
+                    // prepend "attributes." to the beginning of a string to send an attribute of the model
                     // send the models name
                     name: 'attributes.name',
                     
