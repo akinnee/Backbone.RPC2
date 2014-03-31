@@ -14,6 +14,8 @@ Lo-Dash (not the Underscore build) or Underscore with a shim to make _.deepClone
 // so this works with requirejs, node require, commonjs, etc.
 var RPC2 = require('backbone.rpc2');
 
+// Models which should sync using the RPC 2.0 service must extend
+// Backbone RPC2's Model instead of Backbone.Model directly.
 var BaseModel = RPC2.Model.extend({
     
     url: 'https://url.to/jsonrpc/service',
