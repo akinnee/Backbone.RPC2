@@ -77,8 +77,14 @@
 
 		};
 
+		// method can be a function which returns the method to use
+		var remoteMethod = model.rpcOptions.methods[method].method;
+		if (typeof remoteMethod === 'function') {
+			remoteMethod = remoteMethod(model);
+		}
+
 		// construct the params based on the rpcOptions
-		var payload = model.constructParams(method);
+		var payload = model.constructParams(method, remoteMethod);
 
 		// add any data passed in to the payload
 		if (typeof options.data === 'object') {
@@ -86,7 +92,7 @@
 		}
 
 		// make the call, passing in our success and error handlers and returning the deferred object that jQuery $.ajax returns
-		var deferred = client.call(model.rpcOptions.methods[method].method, payload, success, error);
+		var deferred = client.call(remoteMethod, payload, success, error);
 
 		return deferred;
 	};
@@ -129,7 +135,7 @@
 		/**
 		 * Create the params object based on the method we're calling
 		 */
-		constructParams: function(method) {
+		constructParams: function(method, remoteMethod) {
 			// get the params for this method
 			var params = this.rpcOptions.methods[method].params;
 			if (typeof params !== 'function') {
@@ -139,7 +145,7 @@
 
 			// params might be a function
 			if (typeof params === 'function') {
-				params = params(this);
+				params = params(this, remoteMethod);
 			}
 
 			if (!params) {
