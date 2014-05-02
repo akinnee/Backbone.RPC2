@@ -43,7 +43,7 @@
 	}
 
 	// Define the RPC2 plugin
-	var RPC2 = {};
+	var RPC2 = _.extend({}, Backbone.Events);
 
 	// Attach our plugin to Backbone
 	Backbone.RPC2 = RPC2;
@@ -90,6 +90,10 @@
 		if (typeof options.data === 'object') {
 			payload = _.extend(payload, options.data);
 		}
+
+		// trigger an event we can listen to for testing purposes
+		RPC2.trigger('sync:remoteMethod', remoteMethod);
+		RPC2.trigger('sync:payload', payload);
 
 		// make the call, passing in our success and error handlers and returning the deferred object that jQuery $.ajax returns
 		var deferred = client.call(remoteMethod, payload, success, error);
