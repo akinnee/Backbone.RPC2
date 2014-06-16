@@ -32,16 +32,6 @@
  */
 }(function (Backbone, _, $, JsonRpcClient) {
 
-	/**
-	 * Helpers
-	 */
-	// Fallback to JSON.stringify if $.toJSON is not available
-	if (typeof $.toJSON === 'undefined') {
-		$.toJSON = function(object) {
-			return JSON.stringify(object);
-		};
-	}
-
 	// Define the RPC2 plugin
 	var RPC2 = _.extend({}, Backbone.Events);
 
