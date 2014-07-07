@@ -160,7 +160,7 @@
 
 			var model = this;
 
-			$.each(params, function(param, attribute) {
+			_.each(params, function(attribute, param) {
 				// if this attrbite is an object (or an array), we should recurse into it any update its attributes
 				if (typeof attribute === 'object') {
 					attribute = model.recursivelySetParams(attribute);
