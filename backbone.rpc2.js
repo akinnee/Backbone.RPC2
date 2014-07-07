@@ -75,6 +75,9 @@
 
 		// construct the params based on the rpcOptions
 		var payload = model.constructParams(method, remoteMethod);
+		if (!payload) {
+			return false;
+		}
 
 		// add any data passed in to the payload
 		if (typeof options.data === 'object') {
@@ -140,6 +143,10 @@
 			// params might be a function
 			if (typeof params === 'function') {
 				params = params(this, remoteMethod);
+			}
+
+			if (params === false) {
+				return false;
 			}
 
 			if (!params) {
