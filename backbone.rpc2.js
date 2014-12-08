@@ -75,6 +75,9 @@
 
 		// construct the params based on the rpcOptions
 		var payload = model.constructParams(method, remoteMethod);
+		// allow other things like parse to see the payload that was sent
+		options.payload = payload;
+
 		if (!payload) {
 			return false;
 		}
