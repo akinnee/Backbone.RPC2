@@ -48,7 +48,8 @@
 
 		var client = new JsonRpcClient({
 			ajaxUrl: model.url,
-			headers: model.rpcOptions.headers
+			headers: model.rpcOptions.headers,
+			timeout: model.rpcOptions.timeout
 		});
 
 		var success = function(response) {
