@@ -155,7 +155,7 @@
 
 			$.each(params, function(param, attribute) {
 				// if this attrbite is an object (or an array), we should recurse into it any update its attributes
-				if (typeof attribute === 'object') {
+				if (typeof attribute === 'object' && attribute) {
 					attribute = model.recursivelySetParams(attribute);
 
 				} else if (typeof attribute === 'string') {
