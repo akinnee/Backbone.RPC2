@@ -32,18 +32,8 @@
  */
 }(function (Backbone, _, $, JsonRpcClient) {
 
-	/**
-	 * Helpers
-	 */
-	// Fallback to JSON.stringify if $.toJSON is not available
-	if (typeof $.toJSON === 'undefined') {
-		$.toJSON = function(object) {
-			return JSON.stringify(object);
-		};
-	}
-
 	// Define the RPC2 plugin
-	var RPC2 = {};
+	var RPC2 = _.extend({}, Backbone.Events);
 
 	// Attach our plugin to Backbone
 	Backbone.RPC2 = RPC2;
@@ -58,7 +48,8 @@
 
 		var client = new JsonRpcClient({
 			ajaxUrl: model.url,
-			headers: model.rpcOptions.headers
+			headers: model.rpcOptions.headers,
+			timeout: model.rpcOptions.timeout
 		});
 
 		var success = function(response) {
@@ -77,16 +68,32 @@
 
 		};
 
+		// method can be a function which returns the method to use
+		var remoteMethod = model.rpcOptions.methods[method].method;
+		if (typeof remoteMethod === 'function') {
+			remoteMethod = remoteMethod(model);
+		}
+
 		// construct the params based on the rpcOptions
-		var payload = model.constructParams(method);
+		var payload = model.constructParams(method, remoteMethod);
+		// allow other things like parse to see the payload that was sent
+		options.payload = payload;
+
+		if (!payload) {
+			return false;
+		}
 
 		// add any data passed in to the payload
 		if (typeof options.data === 'object') {
 			payload = _.extend(payload, options.data);
 		}
 
+		// trigger an event we can listen to for testing purposes
+		RPC2.trigger('sync:remoteMethod', remoteMethod);
+		RPC2.trigger('sync:payload', payload);
+
 		// make the call, passing in our success and error handlers and returning the deferred object that jQuery $.ajax returns
-		var deferred = client.call(model.rpcOptions.methods[method].method, payload, success, error);
+		var deferred = client.call(remoteMethod, payload, success, error);
 
 		return deferred;
 	};
@@ -129,7 +136,7 @@
 		/**
 		 * Create the params object based on the method we're calling
 		 */
-		constructParams: function(method) {
+		constructParams: function(method, remoteMethod) {
 			// get the params for this method
 			var params = this.rpcOptions.methods[method].params;
 			if (typeof params !== 'function') {
@@ -139,7 +146,11 @@
 
 			// params might be a function
 			if (typeof params === 'function') {
-				params = params(this);
+				params = params(this, remoteMethod);
+			}
+
+			if (params === false) {
+				return false;
 			}
 
 			if (!params) {
@@ -153,7 +164,7 @@
 
 			var model = this;
 
-			$.each(params, function(param, attribute) {
+			_.each(params, function(attribute, param) {
 				// if this attrbite is an object (or an array), we should recurse into it any update its attributes
 				if (typeof attribute === 'object' && attribute) {
 					attribute = model.recursivelySetParams(attribute);
