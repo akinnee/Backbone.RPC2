@@ -5,7 +5,7 @@ Use Backbone with a JSON RPC 2.0 API
 
 # Requirements
 
-Lo-Dash (not the Underscore build) or Underscore with a shim to make _.deepClone work.
+[Lo-Dash](https://lodash.com/) (not the Underscore build) or Underscore with a mixin that adds the  _.deepClone function. Here's an example of an mixin that adds _.deepClone to underscore: https://github.com/mateusmaso/underscore.deepclone
 
 # Usage
 
